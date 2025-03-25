@@ -1,2 +1,4 @@
-# docker_vpn_templates
-Different vpn templates for Dockerfiles and docker-compose
+# docker_templates
+
+- different vpn templates for Dockerfiles and docker-compose
+- cups template
