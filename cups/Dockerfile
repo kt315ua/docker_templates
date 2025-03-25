@@ -59,6 +59,14 @@ RUN sed -i 's|Listen localhost:631|Listen 0.0.0.0:631|' /etc/cups/cupsd.conf && 
 
 #RUN sed -i 's|.*BrowseRemoteProtocols.*dnssd.*$|BrowseRemoteProtocols none|' /etc/cups/cups-browsed.conf
 
+# WORKAROUND for CUPS remote printing
+# "SpliX Cannot open job" -> (/usr/lib/cups/filter/rastertoqpdl) with status 4.
+# Source: https://forum.mojefedora.cz/t/cups-a-remote-printing-v-f20/7362
+COPY scripts/ML-2160-Series-Rem-Print-Only.ppd /usr/share/ppd/custom/ML-2160-Series-Rem-Print-Only.ppd
+COPY scripts/rastertosame /etc/cups/rastertosame
+RUN chmod +x /etc/cups/rastertosame
+RUN ln -s /etc/cups/rastertosame /usr/lib/cups/filter/rastertosame
+
 # Backup for future restore if user do not provide own configs
 RUN cp -rp /etc/cups /etc/cups-backup
 VOLUME [ "/etc/cups" ]
