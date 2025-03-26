@@ -1,0 +1,8 @@
+# WA for CUPS for ephemeral (dynamically created) USB devices in Docker.
+# Fix issue with "Waiting for printer to become available" after usb device reconnect.
+# Also, clean all pending jobs to avoid any surprises with lost jobs.
+
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="330f", \
+        RUN+="/bin/sh -c '/usr/bin/docker exec CUPS /usr/bin/cancel -a ; /usr/bin/docker restart CUPS &'"
+ACTION=="remove", SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="330f", \
+        RUN+="/usr/bin/docker exec CUPS /usr/bin/cancel -a"
