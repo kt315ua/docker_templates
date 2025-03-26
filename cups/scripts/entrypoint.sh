@@ -36,9 +36,15 @@ fi
 ## Unknown directive IdleExitTimeout on line 32 of /etc/cups/cupsd.conf.
 sed -i "/IdleExitTimeout/d" /etc/cups/cupsd.conf
 
-ulimit -n 65535 && /usr/sbin/avahi-daemon --daemonize -f /etc/avahi/avahi-daemon.conf
-sleep 3
-ulimit -n 65535 && /usr/sbin/cupsd -c /etc/cups/cupsd.conf &
+# Tune ulimit for Avahi and Cups services
+ulimit -n 65535
+
+service dbus start
+sleep 1 # Give a time for service warmup
+/usr/sbin/avahi-daemon -f /etc/avahi/avahi-daemon.conf >> /var/log/avahi.log 2>&1 &
+sleep 1 # Give a time for service warmup
+#ulimit -n 65535 && /usr/sbin/cupsd -c /etc/cups/cupsd.conf &
+service cups start
 
 set +x
 while true; do

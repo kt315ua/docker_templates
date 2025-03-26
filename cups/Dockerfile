@@ -25,6 +25,8 @@ RUN apt-get update -y && apt-get upgrade -y \
     hp-ppd \
     hplip \
     avahi-daemon \
+    avahi-utils \
+    libnss-mdns \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -39,11 +41,17 @@ EXPOSE 5353/udp
 
 # Backend config file changes
 # AVAHI CONFIG
-RUN sed -i 's|.*enable\-dbus=.*$|enable\-dbus=no|' /etc/avahi/avahi-daemon.conf && \
+RUN sed -i 's|^use\-ipv6=.*$|use\-ipv6=no|' /etc/avahi/avahi-daemon.conf && \
+    sed -i 's|.*allow\-interfaces=.*|allow\-interfaces=eth0,lo|' /etc/avahi/avahi-daemon.conf && \
+    sed -i 's|.*enable\-dbus=.*$|enable\-dbus=yes|' /etc/avahi/avahi-daemon.conf && \
+    sed -i 's|.*enable\-wide\-area=.*|enable\-wide\-area=no|' /etc/avahi/avahi-daemon.conf && \
+    sed -i 's|.*publish\-addresses=.*|publish\-addresses=yes|' /etc/avahi/avahi-daemon.conf && \
+    sed -i 's|.*publish\-hinfo=.*|publish\-hinfo=yes|' /etc/avahi/avahi-daemon.conf && \
+    sed -i 's|.*publish\-workstation=.*|publish\-workstation=yes|' /etc/avahi/avahi-daemon.conf && \
     sed -i 's|.*enable\-reflector=.*|enable\-reflector=yes|' /etc/avahi/avahi-daemon.conf && \
     sed -i 's|.*reflect\-ipv=.*|reflect\-ipv=no|' /etc/avahi/avahi-daemon.conf && \
     sed -i 's|.*reflect\-filters=|reflect\-filters=|' /etc/avahi/avahi-daemon.conf && \
-    sed -i 's|^use\-ipv6=.*$|use\-ipv6=no|' /etc/avahi/avahi-daemon.conf
+    sed -i 's|.*rlimit-nofile=.*|rlimit-nofile=65535|' /etc/avahi/avahi-daemon.conf
 
 # CUPS CONFIG
 RUN sed -i 's|Listen localhost:631|Listen 0.0.0.0:631|' /etc/cups/cupsd.conf && \
