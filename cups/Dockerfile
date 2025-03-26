@@ -54,18 +54,16 @@ RUN sed -i 's|^use\-ipv6=.*$|use\-ipv6=no|' /etc/avahi/avahi-daemon.conf && \
     sed -i 's|.*rlimit-nofile=.*|rlimit-nofile=65535|' /etc/avahi/avahi-daemon.conf
 
 # CUPS CONFIG
-RUN sed -i 's|Listen localhost:631|Listen 0.0.0.0:631|' /etc/cups/cupsd.conf && \
-    sed -i 's|Browsing Off|Browsing On|' /etc/cups/cupsd.conf && \
-    sed -i 's|<Location \/>|<Location \/>\n  Allow All|' /etc/cups/cupsd.conf && \
+## General settings
+RUN sed -i 's|MaxLogSize.*|MaxLogSize 32m|' /etc/cups/cupsd.conf && \
+    sed -i 's|Listen localhost:631|Listen 0.0.0.0:631|' /etc/cups/cupsd.conf && \
+    sed -i 's|Browsing No|Browsing Yes|' /etc/cups/cupsd.conf && \
+    sed -i 's|BrowseLocalProtocols.*|BrowseLocalProtocols dnssd|' /etc/cups/cupsd.conf
+
+## Access settings / Security
+RUN sed -i 's|<Location \/>|<Location \/>\n  Allow All|' /etc/cups/cupsd.conf && \
     sed -i 's|<Location \/admin>|<Location \/admin>\n  Allow All\n  Require user @SYSTEM|' /etc/cups/cupsd.conf && \
-    sed -i 's|<Location \/admin\/conf>|<Location \/admin\/conf>\n  Allow All|' /etc/cups/cupsd.conf && \
-    echo "ServerAlias *" >> /etc/cups/cupsd.conf && \
-    echo "DefaultEncryption Never" >> /etc/cups/cupsd.conf
-
-#RUN sed -i 's|Browsing On|Browsing Off|' /etc/cups/cupsd.conf && \
-    #sed -i 's|.*BrowseLocalProtocols.*dnssd.*$|BrowseLocalProtocols none|' /etc/cups/cupsd.conf
-
-#RUN sed -i 's|.*BrowseRemoteProtocols.*dnssd.*$|BrowseRemoteProtocols none|' /etc/cups/cups-browsed.conf
+    sed -i 's|<Location \/admin\/conf>|<Location \/admin\/conf>\n  Allow All|' /etc/cups/cupsd.conf
 
 # WORKAROUND for CUPS remote printing
 # "SpliX Cannot open job" -> (/usr/lib/cups/filter/rastertoqpdl) with status 4.
