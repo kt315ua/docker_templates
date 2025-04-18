@@ -20,4 +20,7 @@ fi
 
 echo "Starting service on http://${HOST_IP}:${HOST_PORT}..."
 
+docker rm ollama-llm-model
+docker rm open-webui
+
 docker compose up
