@@ -6,8 +6,9 @@ services:
     container_name: ollama-llm-model
     hostname: ollama-llm-model
     environment:
+        - OLLAMA_HOST="0.0.0.0:11434"
         - MODEL=${OLLAMA_LLM_MODEL}
-        - HSA_OVERRIDE_GFX_VERSION=${HSA_OVERRIDE_GFX_VERSION}  # ← для GFX1201
+        - HSA_OVERRIDE_GFX_VERSION=${HSA_OVERRIDE_GFX_VERSION}
         - ROC_ENABLE_PRE_VEGA=1
         - HIP_VISIBLE_DEVICES=0
     tty: true
@@ -20,10 +21,10 @@ services:
     volumes:
       - "${OLLAMA_DATA}:/root/.ollama"
 
-  open-webui:
+  ollama-open-webui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
-    hostname: open-webui
+    container_name: ollama-open-webui
+    hostname: ollama-open-webui
     depends_on:
       - ollama-llm-model
     environment:
