@@ -1,0 +1,42 @@
+services:
+  cups:
+    image: cups:${TAG}
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: cups
+    hostname: cups
+    restart: unless-stopped
+    tty: true
+    environment:
+      - TZ=UTC
+      - CUPSADMIN=${CUPSADMIN}
+      - CUPSPASSWORD=${CUPSPASSWORD}
+      - LANG=C.UTF-8
+      - DEBIAN_FRONTEND=noninteractive
+    dns:
+      - ${DNS1}
+      - ${DNS2}
+    volumes:
+      - cups_data:/etc/cups
+    networks:
+      macvlan-local-net-0:
+        ipv4_address: ${IP_ADDR}
+    devices:
+      - /dev/usb:/dev/usb
+      - /dev/bus/usb:/dev/bus/usb
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: '1.0'
+        reservations:
+          memory: 256m
+
+volumes:
+  cups_data:
+    external: true
+
+networks:
+  macvlan-local-net-0:
+    external: true

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# WORKAROUND for CUPS remote printing
+# "SpliX Cannot open job" -> (/usr/lib/cups/filter/rastertoqpdl) with status 4.
+# Source: https://forum.mojefedora.cz/t/cups-a-remote-printing-v-f20/7362
+
+set -x
+[ -n "$6" ] && exec <"$6"
+cat
