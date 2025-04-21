@@ -1,0 +1,18 @@
+HOST_IP=127.0.0.1
+HOST_PORT=8080
+
+OLLAMA_DATA=/home/dockeruser/.ollama_data
+WEBUI_DATA=/home/dockeruser/.webui_data
+
+# Models: https://ollama.com/models
+#OLLAMA_LLM_MODEL=mistral:7b
+#OLLAMA_LLM_MODEL=gemma3:4b
+#OLLAMA_LLM_MODEL=gemma3:12b
+OLLAMA_LLM_MODEL=llama3.1:8b
+
+HSA_OVERRIDE_GFX_VERSION=12.0.1
+
+# RAG SETTINGS
+QDRANT_DATA=/home/dockeruser/.qdrant_data
+ANYLLM_DATA=/home/dockeruser/.anyllm_data
+OLLAMA_EMBED_MODEL=nomic-embed-text
