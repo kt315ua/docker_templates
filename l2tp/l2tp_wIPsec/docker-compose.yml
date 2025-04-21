@@ -1,0 +1,50 @@
+services:
+  l2tp-ipsec:
+    image: l2tp-ipsec:${TAG}
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: l2tp-ipsec
+    hostname: l2tp-ipsec
+    privileged: true
+    restart: unless-stopped
+    tty: true
+    environment:
+      - DEFAULT_GW=${DEFAULT_GW}
+      - VPN_SERVER_IP=${VPN_SERVER_IP}
+      - VPN_IPSEC_PSK=${VPN_IPSEC_PSK}
+      - VPN_USER=${VPN_USER}
+      - VPN_PASSWORD=${VPN_PASSWORD}
+      - MAIN_NETIF=${MAIN_NETIF}
+      - PPP_NETIF=${PPP_NETIF}
+      - DNS1=${DNS1}
+      - DNS2=${DNS2}
+      - CONNECTON_POLLING=${CONNECTON_POLLING}
+      #- SHAPE_NET1=${SHAPE_NET1}
+      #- SHAPE_SPEED1=${SHAPE_SPEED1}
+      #- SHAPE_NET2=${SHAPE_NET2}
+      #- SHAPE_SPEED2=${SHAPE_SPEED2}
+      - PRINT_INFO=${PRINT_INFO}
+      - PRINT_DEBUG=${PRINT_DEBUG}
+      - LANG=C.UTF-8
+    dns:
+      - ${DNS1}
+      - ${DNS2}
+    volumes:
+      - /lib/modules:/lib/modules:ro
+    networks:
+      macvlan-local-net-0:
+        ipv4_address: ${IP_ADDR}
+    cap_add:
+      - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.4'
+        reservations:
+          memory: 256m
+
+networks:
+  macvlan-local-net-0:
+    external: true
