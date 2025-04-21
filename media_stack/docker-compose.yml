@@ -1,0 +1,45 @@
+services:
+  samba:
+    image: dperson/samba
+    container_name: samba
+    networks:
+      macvlan-local-net-0:
+        ipv4_address: ${IP_ADDR}
+    volumes:
+      - samba_data:/etc/samba
+      - storage_shared_data:/mount
+    ports:
+      - "${IP_ADDR}:137:137/udp"
+      - "${IP_ADDR}:138:138/udp"
+      - "${IP_ADDR}:139:139"
+      - "${IP_ADDR}:445:445"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "445"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
+
+  minidlna:
+    image: vladgh/minidlna
+    container_name: minidlna
+    depends_on:
+      samba:
+        condition: service_healthy
+    volumes:
+      - minidlna_data:/etc/minidlna
+      - storage_shared_data:/media
+    ports:
+      - "${IP_ADDR}:8200:8200"
+
+volumes:
+  samba_data:
+    external: true
+  minidlna_data:
+    external: true
+  storage_shared_data:
+    external: true
+
+networks:
+  macvlan-local-net-0:
+    external: true
