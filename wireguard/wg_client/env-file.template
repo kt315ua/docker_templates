@@ -1,0 +1,6 @@
+TAG=0.0
+TZ=Etc/UTC
+IP_ADDR=A.B.C.D
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+
