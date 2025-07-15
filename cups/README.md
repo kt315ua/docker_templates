@@ -57,6 +57,21 @@ docker build -t cups:latest .
 - Capabilities
   - keep default
 
+# Automatically Pass USB Printer Device in Virtual Machine (libvirt)
+
+On your host machine which running Virtual Machine (libvirt) with USB Printer, follow these steps:  
+
+## 1. Add the UDEV Rule  
+Copy the `99-usb-printer-cups-restart.rules` file to the `/etc/udev/rules.d/` directory:  
+```sh
+    sudo cp 99-usb-printer-cups-libvirt-vm-attach.rules /etc/udev/rules.d/
+```
+## 2. Update UDEV Rules
+Run the following commands to apply the changes:
+```sh
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
+```
 
 # Automatically Restarting CUPS on USB Printer Connection in Docker  
 

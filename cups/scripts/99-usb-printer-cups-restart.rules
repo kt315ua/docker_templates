@@ -2,7 +2,8 @@
 # Fix issue with "Waiting for printer to become available" after usb device reconnect.
 # Also, clean all pending jobs to avoid any surprises with lost jobs.
 
-ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="330f", \
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4e8/330f/100", \
        RUN+="/bin/sh -c '/usr/bin/docker exec cups /usr/bin/cancel -a ; /usr/bin/docker restart cups &'"
-ACTION=="remove", SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", ATTR{idProduct}=="330f", \
-       RUN+="/usr/bin/docker exec cups /usr/bin/cancel -a"
+
+ACTION=="remove", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4e8/330f/100", \
+       RUN+="/bin/sh -c '/usr/bin/docker exec cups /usr/bin/cancel -a ; /usr/bin/docker stop -t 3 cups &'"

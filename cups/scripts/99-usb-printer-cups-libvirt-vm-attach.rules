@@ -1,0 +1,7 @@
+# WA for CUPS for Printer ephemeral (dynamically created) USB device in Virtual Machine (LibVirt)
+
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4e8/330f/100", \
+       RUN+="/bin/sh -c '/usr/bin/logger [udev] USB printer added && virsh attach-device docker-host-1 /root/libvirt/usb-printer.xml --live --config'"
+
+ACTION=="remove", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4e8/330f/100", \
+       RUN+="/bin/sh -c '/usr/bin/logger [udev] USB printer removed && virsh detach-device docker-host-1 /root/libvirt/usb-printer.xml --live --config'"
